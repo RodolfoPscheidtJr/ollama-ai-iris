@@ -14,6 +14,7 @@ This example also shows how to separate the data loading from the query, which i
 
 3\. Install the following python packages using the `pip install` command:
 ```
+dotenv
 llama-index
 llama-index.embeddings.huggingface
 llama-index.llms.ollama
