@@ -140,6 +140,10 @@ class IRISVectorStore(BasePydanticVectorStore):
         from sqlalchemy.orm import sessionmaker
 
         self._engine = create_engine(self.connection_string, echo=self.debug)
+        # sqlalchemy-iris (intersystems driver) disables INSERT ... RETURNING but leaves this
+        # flag True, so the ORM batches multi-row inserts and never gets the generated ids back.
+        if not self._engine.dialect.insert_executemany_returning:
+            self._engine.dialect.insert_executemany_returning_sort_by_parameter_order = False
         self._session = sessionmaker(self._engine)
         with self._engine.connect() as conn:
             self._native_vector = conn.dialect.supports_vectors
